@@ -1,36 +1,58 @@
 package com.example.fashta_163.viewmodel.provider
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.fashta_163.repository.RepositoryAuth
+import androidx.lifecycle.createSavedStateHandle
+import androidx.lifecycle.viewmodel.CreationExtras
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.fashta_163.repository.AplikasiFash
 import com.example.fashta_163.viewmodel.LoginViewModel
 import com.example.fashta_163.viewmodel.RegisterViewModel
+import com.example.fashta_163.viewmodel.pengaturan.CategoryCreateViewModel
+import com.example.fashta_163.viewmodel.pengaturan.CategoryDeleteViewModel
+import com.example.fashta_163.viewmodel.pengaturan.CategoryEditViewModel
+import com.example.fashta_163.viewmodel.pengaturan.CategoryReadViewModel
+
+fun CreationExtras.aplikasiFash(): AplikasiFash =
+    this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
+            as AplikasiFash
 
 object PenyediaViewModel {
-
-    fun provideLoginViewModelFactory(
-        repositoryAuth: RepositoryAuth
-    ): ViewModelProvider.Factory =
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-                    @Suppress("UNCHECKED_CAST")
-                    return LoginViewModel(repositoryAuth) as T
-                }
-                throw IllegalArgumentException("Unknown ViewModel class")
-            }
+    val Factory = viewModelFactory {
+        initializer {
+            LoginViewModel(
+                aplikasiFash().containerApp.repositoryAuth
+            )
+        }
+        initializer {
+            RegisterViewModel(
+                aplikasiFash().containerApp.repositoryAuth
+            )
         }
 
-    fun provideRegisterViewModelFactory(
-        repositoryAuth: RepositoryAuth
-    ): ViewModelProvider.Factory =
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
-                    @Suppress("UNCHECKED_CAST")
-                    return RegisterViewModel(repositoryAuth) as T
-                }
-                throw IllegalArgumentException("Unknown ViewModel class")
-            }
+        // ===== CATEGORY / PENGATURAN =====
+        initializer {
+            CategoryReadViewModel(
+                aplikasiFash().containerApp.repositoryCategory
+            )
         }
+
+        initializer {
+            CategoryCreateViewModel(
+                aplikasiFash().containerApp.repositoryCategory
+            )
+        }
+
+        initializer {
+            CategoryEditViewModel(
+                aplikasiFash().containerApp.repositoryCategory
+            )
+        }
+
+        initializer {
+            CategoryDeleteViewModel(
+                aplikasiFash().containerApp.repositoryCategory
+            )
+        }
+    }
 }

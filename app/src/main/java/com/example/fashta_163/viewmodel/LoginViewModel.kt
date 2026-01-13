@@ -1,82 +1,54 @@
 package com.example.fashta_163.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.example.fashta_163.modeldata.DetailAuth
+import com.example.fashta_163.modeldata.UIStateAuth
+import com.example.fashta_163.modeldata.toDataAdmin
 import com.example.fashta_163.repository.RepositoryAuth
-import com.example.fashta_163.modeldata.ui.LoginUiState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+
 
 class LoginViewModel(
     private val repositoryAuth: RepositoryAuth
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> = _uiState
+    var uiStateAuth by mutableStateOf(UIStateAuth())
+        private set
 
-    // ===== Event dari UI =====
-
-    fun onUsernameChange(value: String) {
-        _uiState.update {
-            it.copy(username = value, errorMessage = null)
-        }
+    fun updateUiState(detailAuth: DetailAuth) {
+        uiStateAuth = UIStateAuth(
+            detailAuth = detailAuth,
+            isEntryValid = validasiInput(detailAuth)
+        )
     }
 
-    fun onPasswordChange(value: String) {
-        _uiState.update {
-            it.copy(password = value, errorMessage = null)
-        }
-    }
+    private fun validasiInput(detail: DetailAuth): Boolean =
+        detail.username.isNotBlank() && detail.password.isNotBlank()
 
-    fun login() {
-        val state = _uiState.value
+    suspend fun login(): Boolean {
+        if (!uiStateAuth.isEntryValid) return false
 
-        // Validasi input kosong (sesuai SRS)
-        if (state.username.isBlank() || state.password.isBlank()) {
-            _uiState.update {
-                it.copy(errorMessage = "Username dan password wajib diisi")
-            }
-            return
-        }
+        return try {
+            val response = repositoryAuth.login(
+                uiStateAuth.detailAuth.toDataAdmin()
+            )
 
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-
-            try {
-                val response = repositoryAuth.login(
-                    username = state.username,
-                    password = state.password
+            if (response.status) {
+                true
+            } else {
+                uiStateAuth = uiStateAuth.copy(
+                    errorMessage = response.message
                 )
-
-                if (response.isSuccessful) {
-                    _uiState.update {
-                        it.copy(isLoginSuccess = true, isLoading = false)
-                    }
-                } else {
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessage = "Username atau password salah"
-                        )
-                    }
-                }
-
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = "Terjadi kesalahan jaringan"
-                    )
-                }
+                false
             }
-        }
-    }
 
-    fun resetLoginStatus() {
-        _uiState.update {
-            it.copy(isLoginSuccess = false)
+        } catch (e: Exception) {
+            uiStateAuth = uiStateAuth.copy(
+                errorMessage = "password atau username salah"
+            )
+            false
         }
     }
 }

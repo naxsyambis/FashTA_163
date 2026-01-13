@@ -1,89 +1,54 @@
 package com.example.fashta_163.viewmodel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.fashta_163.modeldata.ui.RegisterUiState
-import com.example.fashta_163.repository.RepositoryAuth
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import com.example.fashta_163.modeldata.DetailAuth
+import com.example.fashta_163.modeldata.UIStateAuth
+import com.example.fashta_163.modeldata.toDataAdmin
+import com.example.fashta_163.repository.RepositoryAuth
 class RegisterViewModel(
     private val repositoryAuth: RepositoryAuth
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(RegisterUiState())
-    val uiState: StateFlow<RegisterUiState> = _uiState
+    var uiStateAuth by mutableStateOf(UIStateAuth())
+        private set
 
-    fun onUsernameChange(value: String) {
-        _uiState.update { it.copy(username = value) }
+    fun updateUiState(detailAuth: DetailAuth) {
+        uiStateAuth = UIStateAuth(
+            detailAuth = detailAuth,
+            isEntryValid = validasiInput(detailAuth),
+            errorMessage = null
+        )
     }
 
-    fun onPasswordChange(value: String) {
-        _uiState.update { it.copy(password = value) }
-    }
+    private fun validasiInput(detail: DetailAuth): Boolean =
+        detail.username.isNotBlank() && detail.password.isNotBlank()
 
-    fun onConfirmPasswordChange(value: String) {
-        _uiState.update { it.copy(confirmPassword = value) }
-    }
+    suspend fun register(): Boolean {
+        if (!uiStateAuth.isEntryValid) return false
 
-    fun register() {
-        val state = _uiState.value
+        return try {
+            val response = repositoryAuth.register(
+                uiStateAuth.detailAuth.toDataAdmin()
+            )
 
-        // 🔐 VALIDASI FORM (WAJIB)
-        if (state.username.isBlank() ||
-            state.password.isBlank() ||
-            state.confirmPassword.isBlank()
-        ) {
-            _uiState.update {
-                it.copy(errorMessage = "Semua field wajib diisi")
-            }
-            return
-        }
-
-        if (state.password != state.confirmPassword) {
-            _uiState.update {
-                it.copy(errorMessage = "Password tidak sama")
-            }
-            return
-        }
-
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-
-            try {
-                val response = repositoryAuth.register(
-                    state.username,
-                    state.password
+            if (response.status) {
+                true
+            } else {
+                uiStateAuth = uiStateAuth.copy(
+                    errorMessage = response.message
                 )
-
-                if (response.isSuccessful) {
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            isRegisterSuccess = true
-                        )
-                    }
-                } else {
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessage = "Registrasi gagal"
-                        )
-                    }
-                }
-            } catch (e: Exception) {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        errorMessage = "Kesalahan jaringan"
-                    )
-                }
+                false
             }
-        }
-    }
 
-    fun resetRegisterStatus() {
-        _uiState.update { it.copy(isRegisterSuccess = false) }
+        } catch (e: Exception) {
+            // 🔴 INI YANG MENYELAMATKAN APP
+            uiStateAuth = uiStateAuth.copy(
+                errorMessage = "Gagal terhubung ke server"
+            )
+            false
+        }
     }
 }

@@ -7,47 +7,56 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.fashta_163.modeldata.DetailAuth
 import com.example.fashta_163.viewmodel.RegisterViewModel
-import com.example.fashta_163.modeldata.ui.RegisterUiState
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel,
     onRegisterSuccess: () -> Unit,
     onNavigateBackToLogin: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState = viewModel.uiStateAuth
+    val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(uiState.isRegisterSuccess) {
-        if (uiState.isRegisterSuccess) {
-            onRegisterSuccess()
-            viewModel.resetRegisterStatus()
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Register") }
+            )
         }
+    ) { innerPadding ->
+        RegisterBody(
+            detailAuth = uiState.detailAuth,
+            isEntryValid = uiState.isEntryValid,
+            onValueChange = viewModel::updateUiState,
+            onRegisterClick = {
+                coroutineScope.launch {
+                    val success = viewModel.register()
+                    if (success) onRegisterSuccess()
+                }
+            },
+            onBackToLoginClick = onNavigateBackToLogin,
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        )
     }
-
-    RegisterContent(
-        uiState = uiState,
-        onUsernameChange = viewModel::onUsernameChange,
-        onPasswordChange = viewModel::onPasswordChange,
-        onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
-        onRegisterClick = viewModel::register,
-        onBackToLoginClick = onNavigateBackToLogin
-    )
 }
 
 @Composable
-private fun RegisterContent(
-    uiState: RegisterUiState,
-    onUsernameChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
-    onConfirmPasswordChange: (String) -> Unit,
+private fun RegisterBody(
+    detailAuth: DetailAuth,
+    isEntryValid: Boolean,
+    onValueChange: (DetailAuth) -> Unit,
     onRegisterClick: () -> Unit,
-    onBackToLoginClick: () -> Unit
+    onBackToLoginClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
+        modifier = modifier.padding(24.dp),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -55,58 +64,33 @@ private fun RegisterContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Text(
-                text = "Registrasi Admin",
-                style = MaterialTheme.typography.headlineSmall
-            )
-
             OutlinedTextField(
-                value = uiState.username,
-                onValueChange = onUsernameChange,
+                value = detailAuth.username,
+                onValueChange = {
+                    onValueChange(detailAuth.copy(username = it))
+                },
                 label = { Text("Username") },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth()
             )
 
             OutlinedTextField(
-                value = uiState.password,
-                onValueChange = onPasswordChange,
+                value = detailAuth.password,
+                onValueChange = {
+                    onValueChange(detailAuth.copy(password = it))
+                },
                 label = { Text("Password") },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
 
-            OutlinedTextField(
-                value = uiState.confirmPassword,
-                onValueChange = onConfirmPasswordChange,
-                label = { Text("Konfirmasi Password") },
-                singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            if (uiState.errorMessage != null) {
-                Text(
-                    text = uiState.errorMessage,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-
             Button(
                 onClick = onRegisterClick,
-                modifier = Modifier.fillMaxWidth(),
-                enabled = !uiState.isLoading
+                enabled = isEntryValid,
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if (uiState.isLoading) {
-                    CircularProgressIndicator(
-                        strokeWidth = 2.dp,
-                        modifier = Modifier.size(18.dp)
-                    )
-                } else {
-                    Text("Daftar")
-                }
+                Text("Daftar")
             }
 
             TextButton(onClick = onBackToLoginClick) {
@@ -115,4 +99,3 @@ private fun RegisterContent(
         }
     }
 }
-

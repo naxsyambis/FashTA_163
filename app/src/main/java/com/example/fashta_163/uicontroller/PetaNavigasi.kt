@@ -1,32 +1,26 @@
 package com.example.fashta_163.uicontroller
 
-import com.example.fashta_163.viewmodel.provider.PenyediaViewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.fashta_163.repository.AplikasiFash
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fashta_163.uicontroller.route.*
 import com.example.fashta_163.view.auth.LoginScreen
 import com.example.fashta_163.view.auth.RegisterScreen
+import com.example.fashta_163.view.dashboard.DashboardScreen
+import com.example.fashta_163.view.pengaturan.PengaturanScreen
 import com.example.fashta_163.viewmodel.LoginViewModel
 import com.example.fashta_163.viewmodel.RegisterViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
+import com.example.fashta_163.viewmodel.provider.PenyediaViewModel
 
 @Composable
 fun FashApp(
     navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-    val containerApp = remember {
-        (context.applicationContext as AplikasiFash).containerApp
-    }
-
     NavHost(
         navController = navController,
         startDestination = DestinasiLogin.route,
@@ -35,11 +29,8 @@ fun FashApp(
 
         // ===== LOGIN =====
         composable(DestinasiLogin.route) {
-            val loginViewModel: LoginViewModel = viewModel(
-                factory = PenyediaViewModel.provideLoginViewModelFactory(
-                    containerApp.repositoryAuth
-                )
-            )
+            val loginViewModel: LoginViewModel =
+                viewModel(factory = PenyediaViewModel.Factory)
 
             LoginScreen(
                 viewModel = loginViewModel,
@@ -56,11 +47,8 @@ fun FashApp(
 
         // ===== REGISTER =====
         composable(DestinasiRegister.route) {
-            val registerViewModel: RegisterViewModel = viewModel(
-                factory = PenyediaViewModel.provideRegisterViewModelFactory(
-                    containerApp.repositoryAuth
-                )
-            )
+            val registerViewModel: RegisterViewModel =
+                viewModel(factory = PenyediaViewModel.Factory)
 
             RegisterScreen(
                 viewModel = registerViewModel,
@@ -73,9 +61,26 @@ fun FashApp(
             )
         }
 
-        // ===== DASHBOARD (placeholder) =====
-        composable(DestinasiDashboard.route) {
-            /* DashboardScreen() */
+        composable(DestinasiPengaturan.route) {
+            PengaturanScreen(navController = navController)
         }
+
+        // ===== DASHBOARD (sementara placeholder) =====
+        composable(DestinasiDashboard.route) {
+            DashboardScreen(
+                onNavigateToPengaturan = {
+                    navController.navigate(DestinasiPengaturan.route)
+                }
+            )
+        }
+
+        composable(DestinasiPengaturan.route) {
+            PengaturanScreen(navController = navController)
+        }
+
+        composable(DestinasiKelolaKategori.route) {
+            KelolaKategoriScreen()
+        }
+
     }
 }
