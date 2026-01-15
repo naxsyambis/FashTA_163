@@ -81,10 +81,6 @@ fun FashApp(
             )
         }
 
-        composable(DestinasiPengaturan.route) {
-            PengaturanScreen(navController = navController)
-        }
-
         composable(DestinasiKelolaKategori.route) {
             KelolaKategoriScreen()
         }

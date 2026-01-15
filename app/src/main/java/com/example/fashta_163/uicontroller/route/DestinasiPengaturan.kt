@@ -203,9 +203,3 @@ fun DialogKategori(
         }
     )
 }
-
-
-@Composable
-fun ItemCategory(category: Int, onEdit: () -> Unit, onDelete: () -> Unit) {
-    TODO("Not yet implemented")
-}
