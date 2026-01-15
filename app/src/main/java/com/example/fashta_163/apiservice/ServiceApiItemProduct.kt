@@ -3,6 +3,8 @@ package com.example.fashta_163.apiservice
 import com.example.fashta_163.modeldata.DataItemProduct
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -17,13 +19,13 @@ interface ServiceApiItemProduct {
 
     @POST("item/create.php")
     suspend fun postItemProduct(
-        @Body itemProduct: DataItemProduct
+        @Body data: DataItemProduct
     ): Response<Void>
 
     @PUT("item/update.php")
     suspend fun updateItemProduct(
         @Query("id") itemId: Int,
-        @Body itemProduct: DataItemProduct
+        @Body data: DataItemProduct
     ): Response<Void>
 
     @PUT("item/deactivate.php")

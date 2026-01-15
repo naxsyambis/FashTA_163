@@ -1,5 +1,6 @@
 package com.example.fashta_163.repository
 
+import android.R.attr.id
 import com.example.fashta_163.apiservice.ServiceApiItemProduct
 import com.example.fashta_163.modeldata.DataItemProduct
 import retrofit2.Response
@@ -43,11 +44,11 @@ class JaringanRepositoryItemProduct(
         serviceApiItemProduct.postItemProduct(itemProduct)
 
     override suspend fun updateItemProduct(
-        itemId: Int,
+        ItemId: Int,
         itemProduct: DataItemProduct
-    ): Response<Void> =
-        serviceApiItemProduct.updateItemProduct(itemId, itemProduct)
-
+    ) {
+        serviceApiItemProduct.updateItemProduct(itemId = Int, itemProduct)
+    }
     override suspend fun deactivateItemProduct(
         itemId: Int
     ): Response<Void> =

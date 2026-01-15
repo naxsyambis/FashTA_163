@@ -26,6 +26,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +50,10 @@ fun ItemProductScreen(
 ) {
     val viewModel: ItemProductReadViewModel =
         viewModel(factory = PenyediaViewModel.Factory)
+
+    LaunchedEffect(Unit) {
+        viewModel.loadItemProduct()
+    }
 
     val coroutineScope = rememberCoroutineScope()
 

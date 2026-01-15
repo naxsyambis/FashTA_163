@@ -49,6 +49,19 @@ fun ItemProductForm(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        OutlinedTextField(
+            value = detail.size,
+            onValueChange = {
+                onValueChange(
+                    detail.copy(size = it)
+                )
+            },
+            label = { Text("Size*") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Button(
             onClick = onSubmit,
             enabled = isButtonEnabled,

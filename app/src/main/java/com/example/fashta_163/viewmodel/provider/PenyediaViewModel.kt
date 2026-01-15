@@ -86,7 +86,8 @@ object PenyediaViewModel {
 
         initializer {
             ItemProductCreateViewModel(
-                aplikasiFash().containerApp.repositoryItemProduct
+                aplikasiFash().containerApp.repositoryItemProduct,
+                createSavedStateHandle()
             )
         }
 

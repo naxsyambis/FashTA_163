@@ -30,7 +30,7 @@ fun ItemProductEntryScreen(
 
         ItemProductForm(
             modifier = Modifier.padding(padding),
-            detail = uiState.detailItemProduct.copy(product_id = productId),
+            detail = uiState.detailItemProduct,
             onValueChange = viewModel::updateUiState,
             isButtonEnabled = uiState.isEntryValid,
             buttonText = "Simpan",

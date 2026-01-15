@@ -13,6 +13,8 @@ import com.example.fashta_163.uicontroller.route.*
 import com.example.fashta_163.view.auth.LoginScreen
 import com.example.fashta_163.view.auth.RegisterScreen
 import com.example.fashta_163.view.dashboard.DashboardScreen
+import com.example.fashta_163.view.item.ItemProductEditScreen
+import com.example.fashta_163.view.item.ItemProductEntryScreen
 import com.example.fashta_163.view.item.ItemProductScreen
 import com.example.fashta_163.view.pengaturan.PengaturanScreen
 import com.example.fashta_163.view.produk.ProductCreateScreen
@@ -110,6 +112,19 @@ fun FashApp(
         }
 
         composable(
+            route = DestinasiProductEdit.route,
+            arguments = listOf(
+                navArgument("productId") {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            ProductEditScreen(
+                navigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
             route = DestinasiItemProduk.route,
             arguments = listOf(navArgument("productId") {
                 type = NavType.IntType
@@ -130,15 +145,33 @@ fun FashApp(
         }
 
         composable(
-            route = "product_edit/{productId}",
-            arguments = listOf(navArgument("productId") {
-                type = NavType.IntType
-            })
-        ) {
-            ProductEditScreen(
+            route = DestinasiItemProdukCreate.route,
+            arguments = listOf(
+                navArgument("productId") {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+            val productId =
+                backStackEntry.arguments?.getInt("productId") ?: 0
+
+            ItemProductEntryScreen(
+                productId = productId,
                 navigateBack = { navController.popBackStack() }
             )
         }
 
+        composable(
+            route = DestinasiItemProdukEdit.route,
+            arguments = listOf(
+                navArgument(DestinasiItemProdukEdit.itemIdArg) {
+                    type = NavType.IntType
+                }
+            )
+        ) {
+            ItemProductEditScreen(
+                navigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }

@@ -1,5 +1,8 @@
 package com.example.fashta_163.viewmodel.item
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import retrofit2.HttpException
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -25,13 +28,10 @@ class ItemProductReadViewModel(
     private val productId: Int =
         checkNotNull(savedStateHandle[DestinasiItemProduk.productIdArg])
 
-    var statusUiItemProduct: StatusUiItemProduct =
+    var statusUiItemProduct by mutableStateOf<StatusUiItemProduct>(
         StatusUiItemProduct.Loading
+    )
         private set
-
-    init {
-        loadItemProduct()
-    }
 
     fun loadItemProduct() {
         viewModelScope.launch {
