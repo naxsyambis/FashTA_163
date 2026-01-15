@@ -101,10 +101,8 @@ fun ItemProductScreen(
                                         navigateToEdit(item.item_id)
                                     },
                                     onDeactivate = {
-                                        coroutineScope.launch {
-                                            viewModel.deactivateItem(item.item_id)
-                                            viewModel.loadItemProduct()
-                                        }
+                                        selectedItemId = item.item_id
+                                        showDeactivateDialog = true
                                     }
                                 )
                             }
@@ -113,27 +111,28 @@ fun ItemProductScreen(
                 }
             }
         }
+    }
 
-        if (showDeactivateDialog && selectedItemId != null) {
-            ItemProductDeactivateDialog(
-                onConfirm = {
-                    showDeactivateDialog = false
-                    coroutineScope.launch {
-                        viewModel.deactivateItem(selectedItemId!!)
-                        viewModel.loadItemProduct()
-                        snackbarHostState.showSnackbar(
-                            message = "Item produk berhasil dinonaktifkan"
-                        )
-                        selectedItemId = null
-                    }
-                },
-                onDismiss = {
-                    showDeactivateDialog = false
+    if (showDeactivateDialog && selectedItemId != null) {
+        ItemProductDeactivateDialog(
+            onConfirm = {
+                showDeactivateDialog = false
+                coroutineScope.launch {
+                    viewModel.deactivateItem(selectedItemId!!)
+                    viewModel.loadItemProduct()
+                    snackbarHostState.showSnackbar(
+                        message = "Item produk berhasil dinonaktifkan"
+                    )
                     selectedItemId = null
                 }
-            )
-        }
+            },
+            onDismiss = {
+                showDeactivateDialog = false
+                selectedItemId = null
+            }
+        )
     }
+
 }
 
 

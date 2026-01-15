@@ -11,6 +11,9 @@ import com.example.fashta_163.viewmodel.Produk.ProductCreateViewModel
 import com.example.fashta_163.viewmodel.Produk.ProductEditViewModel
 import com.example.fashta_163.viewmodel.Produk.ProductHomeViewModel
 import com.example.fashta_163.viewmodel.RegisterViewModel
+import com.example.fashta_163.viewmodel.item.ItemProductCreateViewModel
+import com.example.fashta_163.viewmodel.item.ItemProductEditViewModel
+import com.example.fashta_163.viewmodel.item.ItemProductReadViewModel
 import com.example.fashta_163.viewmodel.pengaturan.CategoryCreateViewModel
 import com.example.fashta_163.viewmodel.pengaturan.CategoryDeleteViewModel
 import com.example.fashta_163.viewmodel.pengaturan.CategoryEditViewModel
@@ -33,7 +36,6 @@ object PenyediaViewModel {
             )
         }
 
-        // ===== CATEGORY / PENGATURAN =====
         initializer {
             CategoryReadViewModel(
                 aplikasiFash().containerApp.repositoryCategory
@@ -58,7 +60,6 @@ object PenyediaViewModel {
             )
         }
 
-        // ===== PRODUCT =====
         initializer {
             ProductHomeViewModel(
                 aplikasiFash().containerApp.repositoryProduct
@@ -71,8 +72,30 @@ object PenyediaViewModel {
         }
         initializer {
             ProductEditViewModel(
+                createSavedStateHandle(),
                 aplikasiFash().containerApp.repositoryProduct
             )
         }
+
+        initializer {
+            ItemProductReadViewModel(
+                createSavedStateHandle(),
+                aplikasiFash().containerApp.repositoryItemProduct
+            )
+        }
+
+        initializer {
+            ItemProductCreateViewModel(
+                aplikasiFash().containerApp.repositoryItemProduct
+            )
+        }
+
+        initializer {
+            ItemProductEditViewModel(
+                createSavedStateHandle(),
+                aplikasiFash().containerApp.repositoryItemProduct
+            )
+        }
+
     }
 }

@@ -8,6 +8,8 @@ interface RepositoryProduct {
 
     suspend fun getDataProduct(): List<DataProduct>
 
+    suspend fun getProductById(id: Int): DataProduct
+
     suspend fun postDataProduct(
         dataProduct: DataProduct
     ): Response<Void>
@@ -28,6 +30,9 @@ class JaringanRepositoryProduct(
 
     override suspend fun getDataProduct(): List<DataProduct> =
         serviceApiProduct.getProduct()
+
+    override suspend fun getProductById(id: Int): DataProduct =
+        serviceApiProduct.getProductById(id)
 
     override suspend fun postDataProduct(
         dataProduct: DataProduct

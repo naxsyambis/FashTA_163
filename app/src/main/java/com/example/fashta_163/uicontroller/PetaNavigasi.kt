@@ -16,6 +16,7 @@ import com.example.fashta_163.view.dashboard.DashboardScreen
 import com.example.fashta_163.view.item.ItemProductScreen
 import com.example.fashta_163.view.pengaturan.PengaturanScreen
 import com.example.fashta_163.view.produk.ProductCreateScreen
+import com.example.fashta_163.view.produk.ProductEditScreen
 import com.example.fashta_163.view.produk.ProductScreen
 import com.example.fashta_163.viewmodel.LoginViewModel
 import com.example.fashta_163.viewmodel.RegisterViewModel
@@ -131,5 +132,17 @@ fun FashApp(
                 }
             )
         }
+
+        composable(
+            route = "product_edit/{productId}",
+            arguments = listOf(navArgument("productId") {
+                type = NavType.IntType
+            })
+        ) {
+            ProductEditScreen(
+                navigateBack = { navController.popBackStack() }
+            )
+        }
+
     }
 }

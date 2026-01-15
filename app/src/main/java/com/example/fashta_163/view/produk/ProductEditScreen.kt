@@ -12,12 +12,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.fashta_163.modeldata.DataProduct
 import com.example.fashta_163.viewmodel.Produk.ProductEditViewModel
 import com.example.fashta_163.viewmodel.pengaturan.CategoryReadViewModel
 import com.example.fashta_163.viewmodel.provider.PenyediaViewModel
@@ -26,7 +24,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductEditScreen(
-    product: DataProduct,
     navigateBack: () -> Unit
 ) {
     val editViewModel: ProductEditViewModel =
@@ -37,10 +34,6 @@ fun ProductEditScreen(
 
     val uiState = editViewModel.uiStateProduct
     val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(product.product_id) {
-        editViewModel.setProduct(product)
-    }
 
     Scaffold(
         topBar = {

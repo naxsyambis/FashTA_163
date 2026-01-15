@@ -14,6 +14,11 @@ interface ServiceApiProduct {
     @GET("product/read.php")
     suspend fun getProduct(): List<DataProduct>
 
+    @GET("product/read_one.php")
+    suspend fun getProductById(
+        @Query("id") id: Int
+    ): DataProduct
+
     @POST("product/create.php")
     suspend fun postProduct(
         @Body data: DataProduct
