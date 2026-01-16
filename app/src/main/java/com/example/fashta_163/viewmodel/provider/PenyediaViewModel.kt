@@ -5,7 +5,9 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.fashta_163.apiservice.ServiceApiStock
 import com.example.fashta_163.repository.AplikasiFash
+import com.example.fashta_163.repository.JaringanRepositoryStock
 import com.example.fashta_163.viewmodel.LoginViewModel
 import com.example.fashta_163.viewmodel.Produk.ProductCreateViewModel
 import com.example.fashta_163.viewmodel.Produk.ProductEditViewModel
@@ -18,6 +20,8 @@ import com.example.fashta_163.viewmodel.pengaturan.CategoryCreateViewModel
 import com.example.fashta_163.viewmodel.pengaturan.CategoryDeleteViewModel
 import com.example.fashta_163.viewmodel.pengaturan.CategoryEditViewModel
 import com.example.fashta_163.viewmodel.pengaturan.CategoryReadViewModel
+import com.example.fashta_163.viewmodel.stock.StockListViewModel
+import com.example.fashta_163.viewmodel.stock.StockViewModel
 
 fun CreationExtras.aplikasiFash(): AplikasiFash =
     this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
@@ -95,6 +99,18 @@ object PenyediaViewModel {
             ItemProductEditViewModel(
                 createSavedStateHandle(),
                 aplikasiFash().containerApp.repositoryItemProduct
+            )
+        }
+
+        initializer {
+            StockViewModel(
+                repository = aplikasiFash().containerApp.repositoryStock
+            )
+        }
+
+        initializer {
+            StockListViewModel(
+                repository = aplikasiFash().containerApp.repositoryStock
             )
         }
 

@@ -4,6 +4,7 @@ import com.example.fashta_163.apiservice.ServiceApiStock
 import com.example.fashta_163.modeldata.ApiMessage
 import com.example.fashta_163.modeldata.DataStockMovement
 import com.example.fashta_163.modeldata.StockHistory
+import com.example.fashta_163.modeldata.StockItem
 import retrofit2.Response
 
 interface RepositoryStock {
@@ -14,6 +15,8 @@ interface RepositoryStock {
     suspend fun getCurrentStock(itemId: Int): Int
 
     suspend fun getStockHistory(itemId: Int): List<StockHistory>
+
+    suspend fun getStockList(): List<StockItem>
 }
 
 class JaringanRepositoryStock(
@@ -32,4 +35,9 @@ class JaringanRepositoryStock(
     override suspend fun getStockHistory(itemId: Int): List<StockHistory> {
         return service.getStockHistory(itemId)
     }
+
+    override suspend fun getStockList(): List<StockItem> {
+        return service.getStockList()
+    }
+
 }

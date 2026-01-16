@@ -21,6 +21,7 @@ import com.example.fashta_163.view.produk.ProductCreateScreen
 import com.example.fashta_163.view.produk.ProductEditScreen
 import com.example.fashta_163.view.produk.ProductScreen
 import com.example.fashta_163.view.stock.StockInScreen
+import com.example.fashta_163.view.stock.StockListScreen
 import com.example.fashta_163.view.stock.StockMenuScreen
 import com.example.fashta_163.view.stock.StockOutScreen
 import com.example.fashta_163.viewmodel.LoginViewModel
@@ -82,7 +83,7 @@ fun FashApp(
                     navController.navigate(DestinasiProduct.route)
                 },
                 onNavigateToStock = {
-                    navController.navigate(DestinasiStockMenu.route)
+                    navController.navigate(DestinasiStockList.route)
                 }
             )
         }
@@ -183,58 +184,45 @@ fun FashApp(
         }
 
         // ===== STOCK =====
-        composable(DestinasiStockMenu.route) {
+        composable(
+            route = DestinasiStockMenu.route,
+            arguments = listOf(
+                navArgument(DestinasiStockMenu.itemIdArg) {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+
+            val itemId =
+                backStackEntry.arguments?.getInt(
+                    DestinasiStockMenu.itemIdArg
+                ) ?: 0
+
             StockMenuScreen(
-                itemId = 0,
-                navigateToStockIn = { itemId ->
+                itemId = itemId,
+                navigateToStockIn = { id ->
                     navController.navigate(
-                        DestinasiStockIn.createRoute(itemId)
+                        DestinasiStockIn.createRoute(id)
                     )
                 },
-                navigateToStockOut = { itemId ->
+                navigateToStockOut = { id ->
                     navController.navigate(
-                        DestinasiStockOut.createRoute(itemId)
+                        DestinasiStockOut.createRoute(id)
                     )
                 },
-                navigateBack = { navController.popBackStack() }
+                navigateBack = {
+                    navController.popBackStack()
+                }
             )
         }
 
-        composable(
-            route = DestinasiStockIn.route,
-            arguments = listOf(
-                navArgument(DestinasiStockIn.itemIdArg) {
-                    type = NavType.IntType
+        composable(DestinasiStockList.route) {
+            StockListScreen(
+                navigateToStockMenu = { itemId ->
+                    navController.navigate(
+                        DestinasiStockMenu.createRoute(itemId)
+                    )
                 }
-            )
-        ) { backStackEntry ->
-            val itemId =
-                backStackEntry.arguments?.getInt(
-                    DestinasiStockIn.itemIdArg
-                ) ?: 0
-
-            StockInScreen(
-                itemId = itemId,
-                navigateBack = { navController.popBackStack() }
-            )
-        }
-
-        composable(
-            route = DestinasiStockOut.route,
-            arguments = listOf(
-                navArgument(DestinasiStockOut.itemIdArg) {
-                    type = NavType.IntType
-                }
-            )
-        ) { backStackEntry ->
-            val itemId =
-                backStackEntry.arguments?.getInt(
-                    DestinasiStockOut.itemIdArg
-                ) ?: 0
-
-            StockOutScreen(
-                itemId = itemId,
-                navigateBack = { navController.popBackStack() }
             )
         }
     }

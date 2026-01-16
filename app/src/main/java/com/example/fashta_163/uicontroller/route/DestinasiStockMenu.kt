@@ -8,7 +8,9 @@ object DestinasiStockMenu : DestinasiNavigasi {
     override val titleRes = R.string.menu_stock
     const val itemIdArg = "itemId"
 
-    fun createRoute(itemId: Int) = "stock_menu/$itemId"
+    fun createRoute(itemId: Int): String {
+        return "stock_menu/$itemId"
+    }
 }
 
 object DestinasiStockIn : DestinasiNavigasi {
@@ -26,3 +28,9 @@ object DestinasiStockOut : DestinasiNavigasi {
 
     fun createRoute(itemId: Int) = "stock_out/$itemId"
 }
+
+object DestinasiStockList : DestinasiNavigasi {
+    override val route = "stock_list"
+    override val titleRes = R.string.menu_stock
+}
+

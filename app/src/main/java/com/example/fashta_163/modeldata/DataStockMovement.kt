@@ -24,3 +24,20 @@ data class StockHistory(
     val reason: String,
     val created_at: String
 )
+
+@Serializable
+data class StockItem(
+    val item_id: Int,
+    val product_name: String,
+    val size: String,
+    val color: String,
+    val stock: Int
+)
+
+enum class StockReason {
+    INITIAL,
+    PURCHASE,
+    DAMAGED,
+    LOST,
+    ADJUSTMENT
+}
