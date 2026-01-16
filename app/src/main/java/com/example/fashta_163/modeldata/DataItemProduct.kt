@@ -17,7 +17,7 @@ data class DetailItemProduct(
     val product_id: Int = 0,
     val size: String = "",
     val color: String = "",
-    val price: String = ""   // String agar aman untuk input TextField
+    val price: String = ""
 )
 
 data class UIStateItemProduct(

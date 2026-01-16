@@ -19,7 +19,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun DashboardScreen(
     onNavigateToPengaturan: () -> Unit,
-    onNavigateToProduct: () -> Unit
+    onNavigateToProduct: () -> Unit,
+    onNavigateToStock: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -76,6 +77,22 @@ fun DashboardScreen(
                 }
             }
 
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onNavigateToStock() }
+            ) {
+                Column(Modifier.padding(16.dp)) {
+                    Text(
+                        text = "Stok",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        text = "Kelola stok masuk dan keluar",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
         }
     }
 }

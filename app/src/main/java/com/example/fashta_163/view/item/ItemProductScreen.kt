@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,7 +47,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun ItemProductScreen(
     navigateToAdd: (Int) -> Unit,
-    navigateToEdit: (Int) -> Unit
+    navigateToEdit: (Int) -> Unit,
+    navigateToStock: (Int) -> Unit
 ) {
     val viewModel: ItemProductReadViewModel =
         viewModel(factory = PenyediaViewModel.Factory)
@@ -108,6 +110,9 @@ fun ItemProductScreen(
                                     onDeactivate = {
                                         selectedItemId = item.item_id
                                         showDeactivateDialog = true
+                                    },
+                                    onStock = {
+                                        navigateToStock(item.item_id)
                                     }
                                 )
                             }
@@ -147,7 +152,8 @@ fun ItemProductScreen(
 fun ItemProductCard(
     itemProduct: DataItemProduct,
     onEdit: () -> Unit,
-    onDeactivate: () -> Unit
+    onDeactivate: () -> Unit,
+    onStock: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -196,6 +202,17 @@ fun ItemProductCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
+
+                IconButton(
+                    onClick = onStock,
+                    enabled = itemProduct.is_active == 1
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Inventory,
+                        contentDescription = "Kelola Stok"
+                    )
+                }
+
                 IconButton(
                     onClick = onEdit,
                     enabled = itemProduct.is_active == 1

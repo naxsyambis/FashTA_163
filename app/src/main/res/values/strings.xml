@@ -10,5 +10,7 @@
     <string name="item_product">Item Product</string>
     <string name="tambah_item_product">Tamabah Item Product</string>
     <string name="edit_item_product">Edit Item Product</string>
+    <string name="menu_stock">stock</string>
+    <string name="stock_in">stock In</string>
+    <string name="stock_out">stock Out</string>
 </resources>
-

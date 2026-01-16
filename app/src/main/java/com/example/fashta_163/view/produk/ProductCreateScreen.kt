@@ -1,5 +1,6 @@
 package com.example.fashta_163.view.produk
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,8 +48,15 @@ fun ProductCreateScreen(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         if (uri != null) {
+            context.contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+
             entryViewModel.updateUiState(
-                uiState.detailProduct.copy(image_url = uri.toString())
+                uiState.detailProduct.copy(
+                    image_url = uri.toString()
+                )
             )
         }
     }

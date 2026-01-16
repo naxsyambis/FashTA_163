@@ -20,6 +20,9 @@ import com.example.fashta_163.view.pengaturan.PengaturanScreen
 import com.example.fashta_163.view.produk.ProductCreateScreen
 import com.example.fashta_163.view.produk.ProductEditScreen
 import com.example.fashta_163.view.produk.ProductScreen
+import com.example.fashta_163.view.stock.StockInScreen
+import com.example.fashta_163.view.stock.StockMenuScreen
+import com.example.fashta_163.view.stock.StockOutScreen
 import com.example.fashta_163.viewmodel.LoginViewModel
 import com.example.fashta_163.viewmodel.RegisterViewModel
 import com.example.fashta_163.viewmodel.provider.PenyediaViewModel
@@ -69,24 +72,27 @@ fun FashApp(
             )
         }
 
-        composable(DestinasiPengaturan.route) {
-            PengaturanScreen(navController = navController)
-        }
-
-        // ===== DASHBOARD (sementara placeholder) =====
+        // ===== DASHBOARD =====
         composable(DestinasiDashboard.route) {
             DashboardScreen(
                 onNavigateToPengaturan = {
                     navController.navigate(DestinasiPengaturan.route)
                 },
-                onNavigateToProduct = { navController.navigate(DestinasiProduct.route) }
+                onNavigateToProduct = {
+                    navController.navigate(DestinasiProduct.route)
+                },
+                onNavigateToStock = {
+                    navController.navigate(DestinasiStockMenu.route)
+                }
             )
         }
 
-        composable(DestinasiKelolaKategori.route) {
-            KelolaKategoriScreen()
+        // ===== PENGATURAN =====
+        composable(DestinasiPengaturan.route) {
+            PengaturanScreen(navController = navController)
         }
 
+        // ===== PRODUCT =====
         composable("product_home") {
             ProductScreen(
                 navigateToAdd = {
@@ -114,9 +120,7 @@ fun FashApp(
         composable(
             route = DestinasiProductEdit.route,
             arguments = listOf(
-                navArgument("productId") {
-                    type = NavType.IntType
-                }
+                navArgument("productId") { type = NavType.IntType }
             )
         ) {
             ProductEditScreen(
@@ -124,6 +128,7 @@ fun FashApp(
             )
         }
 
+        // ===== ITEM PRODUCT =====
         composable(
             route = DestinasiItemProduk.route,
             arguments = listOf(navArgument("productId") {
@@ -140,6 +145,11 @@ fun FashApp(
                     navController.navigate(
                         DestinasiItemProdukEdit.createRoute(itemId)
                     )
+                },
+                navigateToStock = { itemId ->
+                    navController.navigate(
+                        DestinasiStockMenu.createRoute(itemId)
+                    )
                 }
             )
         }
@@ -147,9 +157,7 @@ fun FashApp(
         composable(
             route = DestinasiItemProdukCreate.route,
             arguments = listOf(
-                navArgument("productId") {
-                    type = NavType.IntType
-                }
+                navArgument("productId") { type = NavType.IntType }
             )
         ) { backStackEntry ->
             val productId =
@@ -170,6 +178,62 @@ fun FashApp(
             )
         ) {
             ItemProductEditScreen(
+                navigateBack = { navController.popBackStack() }
+            )
+        }
+
+        // ===== STOCK =====
+        composable(DestinasiStockMenu.route) {
+            StockMenuScreen(
+                itemId = 0,
+                navigateToStockIn = { itemId ->
+                    navController.navigate(
+                        DestinasiStockIn.createRoute(itemId)
+                    )
+                },
+                navigateToStockOut = { itemId ->
+                    navController.navigate(
+                        DestinasiStockOut.createRoute(itemId)
+                    )
+                },
+                navigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = DestinasiStockIn.route,
+            arguments = listOf(
+                navArgument(DestinasiStockIn.itemIdArg) {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+            val itemId =
+                backStackEntry.arguments?.getInt(
+                    DestinasiStockIn.itemIdArg
+                ) ?: 0
+
+            StockInScreen(
+                itemId = itemId,
+                navigateBack = { navController.popBackStack() }
+            )
+        }
+
+        composable(
+            route = DestinasiStockOut.route,
+            arguments = listOf(
+                navArgument(DestinasiStockOut.itemIdArg) {
+                    type = NavType.IntType
+                }
+            )
+        ) { backStackEntry ->
+            val itemId =
+                backStackEntry.arguments?.getInt(
+                    DestinasiStockOut.itemIdArg
+                ) ?: 0
+
+            StockOutScreen(
+                itemId = itemId,
                 navigateBack = { navController.popBackStack() }
             )
         }
