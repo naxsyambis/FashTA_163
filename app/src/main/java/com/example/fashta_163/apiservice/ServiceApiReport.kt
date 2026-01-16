@@ -8,6 +8,7 @@ interface ServiceApiReport {
 
     @GET("reports/report.php")
     suspend fun getStockReport(
+        @Query("product_id") productId: Int? = null,
         @Query("item_id") itemId: Int? = null,
         @Query("start_date") startDate: String? = null,
         @Query("end_date") endDate: String? = null,

@@ -5,9 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fashta_163.modeldata.DataItemProduct
 import com.example.fashta_163.modeldata.DataProduct
 import com.example.fashta_163.modeldata.StockItem
 import com.example.fashta_163.modeldata.StockReport
+import com.example.fashta_163.repository.RepositoryItemProduct
 import com.example.fashta_163.repository.RepositoryProduct
 import com.example.fashta_163.repository.RepositoryReport
 import com.example.fashta_163.repository.RepositoryStock
@@ -16,27 +18,27 @@ import java.time.LocalDate
 
 class ReportViewModel(
     private val repositoryProduct: RepositoryProduct,
-    private val repositoryStock: RepositoryStock,
+    private val repositoryItemProduct: RepositoryItemProduct,
     private val repositoryReport: RepositoryReport
 ) : ViewModel() {
 
-    /* ================== DATA MASTER ================== */
+    /* ===== DATA MASTER ===== */
 
     var products by mutableStateOf<List<DataProduct>>(emptyList())
         private set
 
-    var items by mutableStateOf<List<StockItem>>(emptyList())
+    var items by mutableStateOf<List<DataItemProduct>>(emptyList())
         private set
 
     var reports by mutableStateOf<List<StockReport>>(emptyList())
         private set
 
-    /* ================== FILTER STATE ================== */
+    /* ===== FILTER STATE ===== */
 
     var selectedProduct by mutableStateOf<DataProduct?>(null)
         private set
 
-    var selectedItem by mutableStateOf<StockItem?>(null)
+    var selectedItem by mutableStateOf<DataItemProduct?>(null)
         private set
 
     var selectedType by mutableStateOf<String?>(null)
@@ -48,7 +50,7 @@ class ReportViewModel(
     var endDate by mutableStateOf<LocalDate?>(null)
         private set
 
-    /* ================== LOAD DATA ================== */
+    /* ===== LOAD DATA ===== */
 
     fun loadProducts() {
         viewModelScope.launch {
@@ -68,11 +70,16 @@ class ReportViewModel(
 
     private fun loadItemsByProduct(productId: Int) {
         viewModelScope.launch {
-            items = repositoryStock.getItemByProduct(productId)
+            try {
+                items = repositoryItemProduct.getItemByProduct(productId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                items = emptyList()
+            }
         }
     }
 
-    fun onItemSelected(item: StockItem?) {
+    fun onItemSelected(item: DataItemProduct?) {
         selectedItem = item
     }
 
@@ -90,13 +97,18 @@ class ReportViewModel(
 
     fun loadReport() {
         viewModelScope.launch {
-            reports = repositoryReport.getStockReport(
-                productId = selectedProduct?.product_id,
-                itemId = selectedItem?.item_id,
-                start = startDate?.toString(),
-                end = endDate?.toString(),
-                type = selectedType
-            )
+            try {
+                reports = repositoryReport.getStockReport(
+                    productId = selectedProduct?.product_id,
+                    itemId = selectedItem?.item_id,
+                    start = startDate?.toString(),
+                    end = endDate?.toString(),
+                    type = selectedType
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+                reports = emptyList()
+            }
         }
     }
 }

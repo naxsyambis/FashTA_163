@@ -37,10 +37,5 @@ interface ServiceApiStock {
         @Query("item_id") itemId: Int
     ): StockItemDetail
 
-    @GET("stock/read_by_product.php")
-    suspend fun getItemByProduct(
-        @Query("product_id") productId: Int
-    ): List<StockItem>
-
 
 }

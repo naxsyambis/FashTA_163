@@ -74,6 +74,12 @@ fun FashApp(
             )
         }
 
+        composable(DestinasiKelolaKategori.route) {
+            KelolaKategoriScreen()
+        }
+
+
+
         // ===== DASHBOARD =====
         composable(DestinasiDashboard.route) {
             DashboardScreen(

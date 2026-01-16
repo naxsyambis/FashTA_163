@@ -30,7 +30,13 @@ class JaringanRepositoryReport(
         end: String?,
         type: String?
     ): List<StockReport> {
-        return serviceReport.getStockReport(itemId, start, end, type)
+        return serviceReport.getStockReport(
+            productId = productId,
+            itemId = itemId,
+            startDate = start,
+            endDate = end,
+            type = type
+        )
     }
 
     override suspend fun getStockItems(): List<StockItem> {

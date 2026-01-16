@@ -20,6 +20,7 @@ import com.example.fashta_163.viewmodel.pengaturan.CategoryCreateViewModel
 import com.example.fashta_163.viewmodel.pengaturan.CategoryDeleteViewModel
 import com.example.fashta_163.viewmodel.pengaturan.CategoryEditViewModel
 import com.example.fashta_163.viewmodel.pengaturan.CategoryReadViewModel
+import com.example.fashta_163.viewmodel.report.ReportViewModel
 import com.example.fashta_163.viewmodel.stock.StockListViewModel
 import com.example.fashta_163.viewmodel.stock.StockViewModel
 
@@ -114,5 +115,15 @@ object PenyediaViewModel {
             )
         }
 
+        initializer {
+            ReportViewModel(
+                repositoryProduct =
+                    aplikasiFash().containerApp.repositoryProduct,
+                repositoryItemProduct =
+                    aplikasiFash().containerApp.repositoryItemProduct,
+                repositoryReport =
+                    aplikasiFash().containerApp.repositoryReport
+            )
+        }
     }
 }

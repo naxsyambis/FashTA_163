@@ -21,10 +21,6 @@ interface RepositoryStock {
 
     suspend fun getItemDetail(itemId: Int): StockItemDetail
 
-    suspend fun getItemByProduct(
-        productId: Int
-    ): List<StockItem>
-
 }
 
 class JaringanRepositoryStock(
@@ -50,12 +46,6 @@ class JaringanRepositoryStock(
 
     override suspend fun getItemDetail(itemId: Int): StockItemDetail {
         return service.getItemDetail(itemId)
-    }
-
-    override suspend fun getItemByProduct(
-        productId: Int
-    ): List<StockItem> {
-        return service.getItemByProduct(productId)
     }
 
 

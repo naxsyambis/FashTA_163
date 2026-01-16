@@ -1,6 +1,7 @@
 package com.example.fashta_163.apiservice
 
 import com.example.fashta_163.modeldata.DataItemProduct
+import com.example.fashta_163.modeldata.StockItem
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -37,5 +38,6 @@ interface ServiceApiItemProduct {
     suspend fun getItemById(
         @Query("id") itemId: Int
     ): DataItemProduct
+
 
 }
